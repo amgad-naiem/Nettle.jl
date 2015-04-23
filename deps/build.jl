@@ -15,7 +15,7 @@ end
   provides( Homebrew.HB, "nettle", nettle, os = :Darwin )
 end
 
-provides( AptGet, "libnettle4", nettle )
+#provides( AptGet, "libnettle4", nettle )
 provides( Yum, "nettle", nettle )
 
 julia_usrdir = normpath(JULIA_HOME*"/../") # This is a stopgap, we need a better built-in solution to get the included libraries
