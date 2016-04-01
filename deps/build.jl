@@ -3,11 +3,11 @@ using Compat
 
 @BinDeps.setup
 
-nettle = library_dependency("nettle", aliases = ["libnettle","libnettle-4-6"])
+nettle = library_dependency("nettle", aliases = ["libnettle","libnettle-4-6","libnettle-6-1","libnettle-6-2"])
 
 @windows_only begin
   using WinRPM
-  provides(WinRPM.RPM, "libnettle-4-6", nettle, os = :Windows )
+  provides(WinRPM.RPM, "libnettle-6-2", nettle, os = :Windows )
 end
 
 @osx_only begin
@@ -19,11 +19,11 @@ end
 provides( Yum, "nettle", nettle )
 
 julia_usrdir = normpath(JULIA_HOME*"/../") # This is a stopgap, we need a better built-in solution to get the included libraries
-libdirs = String["$(julia_usrdir)/lib"]
-includedirs = String["$(julia_usrdir)/include"]
+libdirs = AbstractString["$(julia_usrdir)/lib"]
+includedirs = AbstractString["$(julia_usrdir)/include"]
 env = @compat Dict("HOGWEED_LIBS" => "-L$(libdirs[1]) -L$(BinDeps.libdir(nettle)) -lhogweed -lgmp",
        "NETTLE_LIBS" => "-L$(libdirs[1]) -L$(BinDeps.libdir(nettle)) -lnettle -lgmp",
-       "LD_LIBRARY_PATH" => join([libdirs[1];BinDeps.libdir(nettle)],":"))
+       "LD_LIBRARY_PATH" => join([libdirs[1];BinDeps.libdir(nettle);get(ENV,"LD_LIBRARY_PATH","")],":"))
 
 provides( Sources,
           URI("http://www.lysator.liu.se/~nisse/archive/nettle-2.7.1.tar.gz"),
